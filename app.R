@@ -17,6 +17,9 @@ slug_coords <- list(marker1 = c(-64.0085245702,44.5214525538),
 # example of loading the iNaturalist range maps if needed later
 # range_vanmarmot <- sf::st_read("https://inaturalist-open-data.s3.us-east-1.amazonaws.com/geomodel/geojsons/latest/46091.geojson")
 
+## Loading functions -----------------------------------------------------------
+
+source("sections/intro1.R")
 
 ## USER INTERFACE --------------------------------------------------------------
 
@@ -26,16 +29,16 @@ ui <- fluidPage(
     # Base map -----------------------------------------------------------------
     map_id = "map",
     font_family = "Public Sans",
+    map_type = "maplibre",
     
     sections = list(
       
       # Introduction -----------------------------------------------------------
-      "intro" = story_section(
-        "Blitz the Gap",
-        position = "center",
-        width = 250,
-        content = list()
-      ),
+      "intro1" = intro1(),
+      
+      "intro2" = intro2(),
+      
+      "intro3" = intro3(),
       
       # # Raster layer -----------------------------------------------------------
       # "gaps-filled" = story_section(
@@ -49,16 +52,14 @@ ui <- fluidPage(
         content = list(
           img(src = "https://inaturalist-open-data.s3.amazonaws.com/photos/526940551/large.jpg",
               width = "350px"),
-          a("https://inaturalist.ca/observations/292793285"),
-          p("@marmota_taylor on June 24, 2025 (https://inaturalist.ca/observations/292793285)")
-        )
+          a("© Adam Taylor", src = "https://inaturalist.ca/observations/292793285")        )
       ),
       
       # Location 2 -------------------------------------------------------------
       "location2" = story_section(
         title = "LeConte's Tiger Beetle (Cicindela scutellaris ssp. lecontei)",
         content = list(
-          p("Most eastward sighting of LeConte's Tiger Beetle (Cicindela scutellaris ssp. lecontei), a critically endangered species."),
+          HTML("Most eastward sighting of LeConte's Tiger Beetle (<i>Cicindela scutellaris ssp. lecontei</i>), a critically endangered species."),
           img(src = "https://static.inaturalist.org/photos/557178627/large.jpg", 
               width = "350px")
         )
@@ -81,7 +82,7 @@ ui <- fluidPage(
         content = list(
           p("Thank you for participating in Blitz the Gap."),
           img(src = "https://github.com/PollockLab/blitz-the-gap/blob/master/images/Logo2.png?raw=true",
-              width = "350px")
+              width = "350px", position = "center")
         ),
         position = "center"
       )
@@ -97,16 +98,27 @@ server <- function(input, output, session) {
   
   # Base map -------------------------------------------------------------------
   output$map <- renderMaplibre({
-    maplibre(maptiler_style("satellite"),
-      map_type = "maplibre",
+    maplibre(maptiler_style("topo"),
       scrollZoom = FALSE,
-      center = c(-100.800106, 59.961075)) |>
+      center = c(-101, 62),
+      zoom = 2) |>
       set_projection("globe")
   })
   
   # Introduction ---------------------------------------------------------------
+  
   # set the zoom and center of the base map
-  on_section("map", "intro", {
+  on_section("map", "intro1", {
+    maplibre_proxy("map") 
+  })
+  
+  # set the zoom and center of the base map
+  on_section("map", "intro2", {
+    maplibre_proxy("map") 
+  })
+  
+  # set the zoom and center of the base map
+  on_section("map", "intro3", {
     maplibre_proxy("map") |> 
       fly_to(center = c(-100.800106, 59.961075),
              zoom = 0,
