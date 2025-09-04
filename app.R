@@ -97,9 +97,10 @@ server <- function(input, output, session) {
   
   # Base map -------------------------------------------------------------------
   output$map <- renderMaplibre({
-    maplibre(#maptiler_style("satellite"),
-             scrollZoom = FALSE,
-             center = c(-100.800106, 59.961075)) |>
+    maplibre(maptiler_style("satellite"),
+      map_type = "maplibre",
+      scrollZoom = FALSE,
+      center = c(-100.800106, 59.961075)) |>
       set_projection("globe")
   })
   
