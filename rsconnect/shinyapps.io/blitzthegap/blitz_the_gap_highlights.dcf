@@ -1,0 +1,13 @@
+name: blitz_the_gap_highlights
+title: Blitz the Gap: Highlights
+username: blitzthegap
+account: blitzthegap
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15343061
+bundleId: 10861392
+url: https://blitzthegap.shinyapps.io/blitz_the_gap_highlights/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: deploy.R
