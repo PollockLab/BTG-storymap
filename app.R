@@ -13,11 +13,24 @@ marker_col = "#B9375D"
 
 ## Loading functions -----------------------------------------------------------
 
+# The UI and servers for each section are stored in these function scripts:
 source("sections/transitions.R")
 source("sections/intro.R")
 source("sections/hl_north.R")
 source("sections/hl_greatshots.R")
 source("sections/hl_ranges.R")
+
+
+## Access GBIF API for density map ---------------------------------------------
+
+# use GBIF api for occurrence density maps
+gbif_url <- "https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@1x.png?style=blueHeat.point&datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=CA&eventDate=2025-06-01,2025-09-01"
+# {z},{x},{y}: placeholders for the tile coordinates
+# datasetKey: iNaturalist
+# eventDate: date range (to update)
+# country: Canada (CA)
+# styles: https://api.gbif.org/v2/map/styles.html
+
 
 ## USER INTERFACE --------------------------------------------------------------
 
@@ -41,8 +54,11 @@ ui <- fluidPage(
       "section_north" = transition_to_north(),
       "hl_north1" = hl_north1_ui(),
       "hl_north2" = hl_north2_ui(),
+      "hl_north4" = hl_north4_ui(),
       "hl_north3" = hl_north3_ui(),
       "hl_north3_photo1" = hl_north3_photo1_ui(),
+      "hl_north3_photo2" = hl_north3_photo2_ui(),
+      "hl_north3_photo3" = hl_north3_photo3_ui(),
       
       # Great shots ------------------------------------------------------------
       
@@ -58,6 +74,7 @@ ui <- fluidPage(
       "hl_range2" = hl_range2_ui(),
       
       # End: Thank you ---------------------------------------------------------
+      
       "thankyou" = story_section(
         title = "Thank you!",
         content = list(
@@ -67,14 +84,6 @@ ui <- fluidPage(
         ),
         position = "center"
       )
-      
-      
-      # # Raster layer -----------------------------------------------------------
-      # "gaps-filled" = story_section(
-      #   title = "Gaps no more",
-      #   "Check out the progress made thanks to Blitz the Gap."
-      # ),
-      
     )
   )
 )
@@ -86,23 +95,36 @@ server <- function(input, output, session) {
   
   # Base map -------------------------------------------------------------------
   output$map <- renderMaplibre({
-    maplibre(maptiler_style("topo"),
-      scrollZoom = FALSE,
-      center = c(-101, 62),
+    
+    maplibre(
+      maptiler_style("satellite"),   # base map style
+      scrollZoom = FALSE,       # block scroll zooming otherwise you can't move
+      center = c(-101, 62),     # center-ish of Canada
       zoom = 2) |>
-      set_projection("globe")
+      
+      # set to globe for the sphere look
+      set_projection("globe") |> 
+      
+      # Add the GBIF raster tile layer
+      mapgl::add_raster_source(
+        id = "inat-density-summer2025",
+        tiles = gbif_url 
+      ) |>
+      # Add the raster layer to the map
+      mapgl::add_raster_layer(
+        id = "gbif-layer",
+        source = "inat-density-summer2025",
+        raster_opacity = 0.8)
   })
   
   # Introduction ---------------------------------------------------------------
   
   # set the zoom and center of the base map
   on_section("map", "intro1", {
-    maplibre_proxy("map") 
-  })
+    maplibre_proxy("map") })
   
   on_section("map", "intro2", {
-    maplibre_proxy("map") 
-  })
+    maplibre_proxy("map") })
   
   on_section("map", "transition_to_north", {
     maplibre_proxy("map") |> 
@@ -113,21 +135,22 @@ server <- function(input, output, session) {
   
   # Northern biodiversity highlight
   on_section("map", "hl_north1", {
-    hl_north1_server()
-  })
-  
+    hl_north1_server()})
   on_section("map", "hl_north2", {
-    hl_north2_server()
-  })
+    hl_north2_server()})
+  on_section("map", "hl_north4", {
+    hl_north4_server()})
   
+  # Subsection: Fiord expedition
   on_section("map", "hl_north3", {
-    hl_north3_server()
-  })
-  
+    hl_north3_server()})
   on_section("map", "hl_north3_photo1", {
-    hl_north3_photo1_server()
-  })
-  
+    hl_north3_photo1_server()})
+  on_section("map", "hl_north3_photo2", {
+    hl_north3_photo2_server()})
+  on_section("map", "hl_north3_photo3", {
+    hl_north3_photo3_server()})
+
   on_section("map", "section_shots", {
     maplibre_proxy("map") |> 
       # clear the heatmap and circle layers
@@ -143,12 +166,9 @@ server <- function(input, output, session) {
   # Great shots ----------------------------------------------------------------
   
   on_section("map", "hl_shot1", {
-    hl_shot1_server()
-  })
-  
+    hl_shot1_server()})
   on_section("map", "hl_shot2", {
-    hl_shot2_server()
-  })
+    hl_shot2_server()})
   
   # Range extremes -----------------------------------------------------------------
   
@@ -157,16 +177,13 @@ server <- function(input, output, session) {
       fly_to(center = c(-101, 63),
              zoom = 2,
              pitch = 0,
-             bearing = 0)
-  })
+             bearing = 0) })
   
   on_section("map", "hl_range1", {
-    hl_range1_server() 
-  })
+    hl_range1_server() })
   
   on_section("map", "hl_range2", {
-    hl_range2_server()
-  })
+    hl_range2_server() })
   
   
   # End: Thank you -------------------------------------------------------------
@@ -175,34 +192,7 @@ server <- function(input, output, session) {
       fly_to(center = c(-101, 62),
              zoom = 2,
              pitch = 0,
-             bearing = 0)
-  })
-  
-  # # Raster layer ---------------------------------------------------------------
-  # on_section("map", "gaps-filled", {
-  #   maplibre_proxy("map") |>
-  #     fly_to(center = c(-100.800106, 59.961075),
-  #            zoom = 2,
-  #            pitch = 0,
-  #            bearing = 0) |>
-  # add_image_source(
-  #   id = "radar",
-  #   url = "https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif",
-  #   coordinates = list(
-  #     c(-80.425, 46.437),
-  #     c(-71.516, 46.437),
-  #     c(-71.516, 37.936),
-  #     c(-80.425, 37.936)
-  #   )
-  # ) |>
-  # add_raster_layer(
-  #   id = 'radar-layer',
-  #   source = 'radar',
-  #   raster_fade_duration = 0
-  # )
-  #})
-  
-  
+             bearing = 0)})
 }
 
 shinyApp(ui, server)
