@@ -41,6 +41,8 @@ ui <- fluidPage(
       "section_north" = transition_to_north(),
       "hl_north1" = hl_north1_ui(),
       "hl_north2" = hl_north2_ui(),
+      "hl_north3" = hl_north3_ui(),
+      "hl_north3_photo1" = hl_north3_photo1_ui(),
       
       # Great shots ------------------------------------------------------------
       
@@ -114,13 +116,24 @@ server <- function(input, output, session) {
     hl_north1_server()
   })
   
-  # Northern biodiversity highlight
   on_section("map", "hl_north2", {
     hl_north2_server()
   })
   
+  on_section("map", "hl_north3", {
+    hl_north3_server()
+  })
+  
+  on_section("map", "hl_north3_photo1", {
+    hl_north3_photo1_server()
+  })
+  
   on_section("map", "section_shots", {
     maplibre_proxy("map") |> 
+      # clear the heatmap and circle layers
+      clear_layer("bioblitz") |>
+      clear_layer("bioblitz2") |>
+    # fly to new location!
       fly_to(center = c(-101, 63),
              zoom = 2,
              pitch = 0,
