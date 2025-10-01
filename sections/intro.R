@@ -16,7 +16,7 @@ intro2 = function(){
   story_section(
     title = "This summer, we asked Canada to Blitz the Gap in Canadian biodiversity data.",
     content = list(
-      p(HTML("More than <b>50,000</b> people contributed <b>over 2,000,000 observations</b>! There are some of the highlights."))
+      p(HTML("More than <b>60,000</b> people contributed <b>over 2.7 million observations</b> (and counting!) to iNaturalist Canada this summer! Here are some of the highlights."))
     ),
     position = "center",
     width = 600,

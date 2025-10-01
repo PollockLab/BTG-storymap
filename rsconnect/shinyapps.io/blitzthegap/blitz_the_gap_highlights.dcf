@@ -5,9 +5,9 @@ account: blitzthegap
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15343061
-bundleId: 10879619
+bundleId: 10979175
 url: https://blitzthegap.shinyapps.io/blitz_the_gap_highlights/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: deploy.R|README.md|data
+ignoredFiles: deploy.R|README.md

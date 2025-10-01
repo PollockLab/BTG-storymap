@@ -19,6 +19,7 @@ source("sections/intro.R")
 source("sections/hl_north.R")
 source("sections/hl_greatshots.R")
 source("sections/hl_ranges.R")
+source("sections/hl_missingspecies.R")
 
 
 ## Access GBIF API for density map ---------------------------------------------
@@ -54,36 +55,49 @@ ui <- fluidPage(
       "section_north" = transition_to_north(),
       "hl_north1" = hl_north1_ui(),
       "hl_north2" = hl_north2_ui(),
+      "hl_north5" = hl_north5_ui(),
       "hl_north4" = hl_north4_ui(),
       "hl_north3" = hl_north3_ui(),
       "hl_north3_photo1" = hl_north3_photo1_ui(),
       "hl_north3_photo2" = hl_north3_photo2_ui(),
       "hl_north3_photo3" = hl_north3_photo3_ui(),
       
-      # Great shots ------------------------------------------------------------
-      
-      "section_shots" = transition_to_greatshots(),
-      "hl_shot1" = hl_shot1_ui(),
-      "hl_shot2" = hl_shot2_ui(),
-      
-      
       # Range extremes ---------------------------------------------------------
       
       "section_ranges" = transition_to_ranges(),
       "hl_range1" = hl_range1_ui(),
       "hl_range2" = hl_range2_ui(),
+      "hl_range3" = hl_range3_ui(),
+      
+      # Missing species --------------------------------------------------------
+      
+      "section_missingspecies" = transition_to_missingspecies(),
+      "hl_missing1" = hl_missing1_ui(),
+      "hl_missing2" = hl_missing2_ui(),
+      "hl_missing3" = hl_missing3_ui(),
+      
+      # Great shots ------------------------------------------------------------
+      
+      "section_shots" = transition_to_greatshots(),
+      "hl_shot1" = hl_shot1_ui(),
+      "hl_shot2" = hl_shot2_ui(),
+      "hl_shot3" = hl_shot3_ui(),
+      "hl_shot4" = hl_shot4_ui(),
+      "hl_shot5" = hl_shot5_ui(),
+      "hl_shot6" = hl_shot6_ui(),
+      "hl_shot7" = hl_shot7_ui(),
+      "hl_shot8" = hl_shot8_ui(),
       
       # End: Thank you ---------------------------------------------------------
       
       "thankyou" = story_section(
         title = "Thank you!",
         content = list(
-          p("Thank you for participating in Blitz the Gap."),
           img(src = "https://github.com/PollockLab/blitz-the-gap/blob/master/images/Logo2.png?raw=true",
-              width = "350px", position = "center")
-        ),
-        position = "center"
-      )
+              width = "350px", position = "center"),
+          p("Thank you for Blitzing the Gap in Canadian biodiversity data this summer. There are still many gaps to fill, but we've been amazed to see the progress that can be made in one summer, thanks to the passionate community on iNaturalist.ca."),
+          p(HTML("Stay tuned, we'll keep updating this highlights reel with more results as we analyze all the amazing observations you've made this summer! Visit <a href ='https://blitzthegap.org/'>blitzthegap.org</a> for more information."))),
+        position = "center")
     )
   )
 )
@@ -138,6 +152,8 @@ server <- function(input, output, session) {
     hl_north1_server()})
   on_section("map", "hl_north2", {
     hl_north2_server()})
+  on_section("map", "hl_north5", {
+    hl_north5_server()})
   on_section("map", "hl_north4", {
     hl_north4_server()})
   
@@ -163,13 +179,6 @@ server <- function(input, output, session) {
              bearing = 0)
   })
   
-  # Great shots ----------------------------------------------------------------
-  
-  on_section("map", "hl_shot1", {
-    hl_shot1_server()})
-  on_section("map", "hl_shot2", {
-    hl_shot2_server()})
-  
   # Range extremes -----------------------------------------------------------------
   
   on_section("map", "section_ranges", {
@@ -185,10 +194,51 @@ server <- function(input, output, session) {
   on_section("map", "hl_range2", {
     hl_range2_server() })
   
+  on_section("map", "hl_range3", {
+    hl_range3_server() })
+  
+  # Missing species ------------------------------------------------------------
+  
+  on_section("map", "transition_to_missingspecies", {
+    maplibre_proxy("map") |> 
+      fly_to(center = c(-101, 63),
+             zoom = 2,
+             pitch = 0,
+             bearing = 0)
+  })
+  
+  on_section("map", "hl_missing1", {
+    hl_missing1_server() })
+  
+  on_section("map", "hl_missing2", {
+    hl_missing2_server() })
+  
+  on_section("map", "hl_missing3", {
+    hl_missing3_server() })
+  
+  # Great shots ----------------------------------------------------------------
+  
+  on_section("map", "hl_shot1", {
+    hl_shot1_server()})
+  on_section("map", "hl_shot2", {
+    hl_shot2_server()})
+  on_section("map", "hl_shot3", {
+    hl_shot3_server()})
+  on_section("map", "hl_shot4", {
+    hl_shot4_server()})
+  on_section("map", "hl_shot5", {
+    hl_shot5_server()})
+  on_section("map", "hl_shot6", {
+    hl_shot6_server()})
+  on_section("map", "hl_shot7", {
+    hl_shot7_server()})
+  on_section("map", "hl_shot8", {
+    hl_shot8_server()})
   
   # End: Thank you -------------------------------------------------------------
   on_section("map", "thankyou", {
     maplibre_proxy("map") |>
+      clear_markers() |>
       fly_to(center = c(-101, 62),
              zoom = 2,
              pitch = 0,
