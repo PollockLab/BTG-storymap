@@ -25,7 +25,7 @@ source("sections/hl_missingspecies.R")
 ## Access GBIF API for density map ---------------------------------------------
 
 # use GBIF api for occurrence density maps
-gbif_url <- "https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@1x.png?style=blueHeat.point&datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=CA&eventDate=2025-06-01,2025-09-01"
+gbif_url <- "https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@1x.png?style=blueHeat.point&datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=CA&eventDate=2025-06-01,2025-09-31"
 # {z},{x},{y}: placeholders for the tile coordinates
 # datasetKey: iNaturalist
 # eventDate: date range (to update)
