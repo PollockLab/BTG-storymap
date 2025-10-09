@@ -20,7 +20,7 @@ source("sections/hl_north.R")
 source("sections/hl_greatshots.R")
 source("sections/hl_ranges.R")
 source("sections/hl_missingspecies.R")
-
+source("sections/hl_kba.R")
 
 ## Access GBIF API for density map ---------------------------------------------
 
@@ -76,6 +76,13 @@ ui <- fluidPage(
       "hl_missing2" = hl_missing2_ui(),
       "hl_missing3" = hl_missing3_ui(),
       
+      # Key Biodiversity Areas for conservation --------------------------------
+      
+      "section_kba" = transition_to_kba(),
+      "hl_kba1" = hl_kba1_ui(),
+      "hl_kba2" = hl_kba2_ui(),
+      "hl_kba3" = hl_kba3_ui(),
+      
       # Great shots ------------------------------------------------------------
       
       "section_shots" = transition_to_greatshots(),
@@ -114,7 +121,7 @@ server <- function(input, output, session) {
       maptiler_style("satellite"),   # base map style
       scrollZoom = FALSE,       # block scroll zooming otherwise you can't move
       center = c(-101, 62),     # center-ish of Canada
-      zoom = 2) |>
+      zoom = 1.6) |>
       
       # set to globe for the sphere look
       set_projection("globe") |> 
@@ -215,6 +222,28 @@ server <- function(input, output, session) {
   
   on_section("map", "hl_missing3", {
     hl_missing3_server() })
+  
+  
+  # Key Biodiversity Areas for conservation --------------------------------
+  
+  on_section("map", "transition_to_kba", {
+    maplibre_proxy("map") |> 
+      clear_markers() |>
+      fly_to(center = c(-101, 63),
+             zoom = 2,
+             pitch = 0,
+             bearing = 0)
+  })
+  
+  on_section("map", "hl_kba1", {
+    hl_kba1_server() })
+  
+  on_section("map", "hl_kba2", {
+    hl_kba2_server() })
+  
+  on_section("map", "hl_kba3", {
+    hl_kba3_server() })
+  
   
   # Great shots ----------------------------------------------------------------
   
