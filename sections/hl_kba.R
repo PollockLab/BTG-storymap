@@ -8,8 +8,7 @@ hl_kba1_ui = function(){
     title = "The Wilmatte's Plasterer Bee",
     position = "right",
     content = list(
-      HTML("User <a href='https://inaturalist.ca/people/kirapeters6'>@kirapeters6</a>’s record of Wilmatte's Plasterer Bee (<i>Colletes wilmattae</i>) adds to the handful of Canadian records that exist for this stunning and extremely rare cellophane bee. This confirmation of the species’ presence at Brandon Sandhills and Douglas Marsh KBA provide further recent evidence that the species is likely to meet KBA criteria here.
-           Denis Doucet (@nbdragonflyguy) posted the most Eastward sighting of LeConte's Tiger Beetle (<i>Cicindela scutellaris</i> ssp. <i>lecontei</i>) so far. This is a critically imperilled species in New Brunswick."),
+      HTML("User <a href='https://inaturalist.ca/people/kirapeters6'>@kirapeters6</a>’s record of Wilmatte's Plasterer Bee (<i>Colletes wilmattae</i>) adds to the handful of Canadian records that exist for this stunning and extremely rare cellophane bee. This confirmation of the species’ presence at Brandon Sandhills and Douglas Marsh KBA provide further recent evidence that the species is likely to meet KBA criteria here."),
       img(src = "https://inaturalist-open-data.s3.amazonaws.com/photos/550663135/large.jpg", 
           width = "350px"),
       p(HTML("© Kira (<a href = 'https://inaturalist.ca/people/kirapeters6'>@kirapeters6</a>), some rights reserved (CC-BY-NC) | <a href = 'https://inaturalist.ca/observations/305410552'>View observation</a>"))    )
